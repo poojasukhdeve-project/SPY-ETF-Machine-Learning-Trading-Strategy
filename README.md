@@ -2,222 +2,104 @@
 
 ## The Story Behind This Project
 
-As an aspiring Data Scientist and Machine Learning Engineer, I wanted to answer a simple but challenging question:
+Like many people interested in Data Science and Finance, I often wondered:
 
-> Can machine learning help predict tomorrow's stock market movement?
+> **"If we have years of historical stock market data, can Machine Learning learn from the past and help us make better investment decisions?"**
 
-To explore this question, I built a complete quantitative trading pipeline using historical data from the SPY ETF (S&P 500 ETF), one of the most widely traded market indices in the world.
+At first, the idea seemed simple.
 
-Instead of jumping directly into advanced models, I followed the same process used by professional quantitative analysts:
+Collect data ➜ Train a model ➜ Predict tomorrow ➜ Beat the market.
 
-1. Collect and understand financial data.
-2. Engineer meaningful market features.
-3. Evaluate statistical relationships.
-4. Build predictive machine learning models.
-5. Backtest trading strategies.
-6. Compare performance across multiple models.
+But after building this project, I realized that financial markets are far more complex than they appear.
 
-This project documents that entire journey.
+This project was my attempt to explore that question using Python and Machine Learning.
 
 ---
 
-# 🎯 Project Goal
+# 🎯 Objective
 
-The objective of this project is to predict the next day's SPY return and evaluate whether machine learning models can generate profitable trading signals.
+The goal was to build an end-to-end machine learning pipeline capable of analyzing historical SPY ETF data and generating predictions for the next trading day.
 
-The final goal is not only prediction accuracy but also:
+More importantly, I wanted to answer a practical question:
 
-* Strategy profitability
-* Risk-adjusted returns
-* Trading performance
-* Model interpretability
+**Can a machine learning strategy outperform a simple Buy & Hold investment?**
 
 ---
 
-# 📊 Dataset
+# 🔍 My Approach
 
-Historical SPY ETF market data from:
+Instead of using raw stock prices, I engineered several financial features that traders and analysts commonly use.
 
-* Open Price
-* High Price
-* Low Price
-* Close Price
-* Volume
+### Feature Engineering
 
-Period:
+* Daily Returns
+* 5-Day Returns
+* 10-Day Returns
+* Rolling Volatility
+* Moving Averages (MA5, MA20, MA50)
+* Moving Average Signals
+* Volume Ratios
+* Price-to-Moving-Average Ratios
 
-* January 2020 – December 2024
-
-Total observations:
-
-* 1,258 trading days
-
----
-
-# 🔍 Exploratory Data Analysis
-
-The project begins with an extensive exploration of SPY market behavior.
-
-Key analyses include:
-
-* Dataset inspection
-* Missing value analysis
-* Statistical summaries
-* Closing price trends
-* Daily return distributions
-* Rolling volatility analysis
-
-### Key Finding
-
-The SPY ETF showed strong long-term growth but experienced periods of significant volatility, particularly during market stress events.
-
----
-
-# ⚙️ Feature Engineering
-
-To capture market behavior, several predictive features were created.
-
-### Return Features
-
-* Return_1D
-* Return_5D
-* Return_10D
-
-### Volatility Features
-
-* Volatility_5D
-* Volatility_20D
-
-### Trend Features
-
-* MA5
-* MA20
-* MA50
-* MA_Signal
-
-### Volume Features
-
-* Volume_Avg_20
-* Volume_Ratio
-
-### Relative Price Features
-
-* Price_MA20_Ratio
-
-### Target Variable
-
-* Tomorrow_Return
-
----
-
-# 📈 Statistical Analysis
-
-A correlation study was performed to understand how features relate to future returns.
-
-### Observation
-
-Most engineered features showed very weak correlation with tomorrow's return.
-
-This highlights an important reality of financial markets:
-
-> Future price movements are extremely difficult to predict.
+These features were then used to predict the next day's SPY return.
 
 ---
 
 # 🤖 Machine Learning Models
 
-Three machine learning approaches were implemented and evaluated.
+I implemented and compared three different machine learning approaches:
 
-## 1. Linear Regression
+### 1. Linear Regression
 
-A baseline predictive model used to estimate future returns.
+A simple baseline model used to capture linear relationships between market features and future returns.
 
-### Results
+### 2. Random Forest Regressor
 
-* MSE: 0.000068
-* R²: -0.066
-* Total Return: 2.43%
-* Sharpe Ratio: 0.260
+An ensemble learning model designed to identify more complex, non-linear market patterns.
 
----
+### 3. Random Forest Classifier
 
-## 2. Random Forest Regressor
-
-A non-linear ensemble learning model capable of capturing complex market relationships.
-
-### Results
-
-* MSE: 0.000069
-* R²: -0.086
-* Total Return: 6.44%
-* Sharpe Ratio: 0.573
-
-### Key Insight
-
-Although prediction accuracy remained difficult, the trading strategy generated the highest risk-adjusted return.
+A classification model used to predict whether the market would move up or down.
 
 ---
 
-## 3. Random Forest Classifier
+# 📊 Strategy Evaluation
 
-A classification model predicting market direction:
+Rather than stopping at prediction accuracy, I built a complete backtesting framework.
 
-* Up Market → 1
-* Down Market → 0
+Each model generated trading signals which were evaluated using:
 
-### Results
+* Total Return
+* Sharpe Ratio
+* Positive Trading Days
+* Equity Curves
 
-* Accuracy: 52.07%
-* Total Return: 1.88%
-* Sharpe Ratio: 0.216
-
-### Key Insight
-
-The model slightly outperformed random guessing but produced weaker trading performance than regression-based approaches.
+Finally, every strategy was compared against a passive Buy & Hold benchmark.
 
 ---
 
-# 🏆 Final Model Ranking
+# 🏆 Final Results
 
-## 🥇 Random Forest Regressor
-
-* Highest Total Return (6.44%)
-* Highest Sharpe Ratio (0.573)
-* Best overall trading performance
-
-## 🥈 Linear Regression
-
-* Total Return: 2.43%
-* Sharpe Ratio: 0.260
-* Simpler and more interpretable model
-
-## 🥉 Random Forest Classifier
-
-* Accuracy: 52.07%
-* Total Return: 1.88%
-* Lowest risk-adjusted performance
+| Strategy                 | Total Return | Sharpe Ratio | Positive Days |
+| ------------------------ | ------------ | ------------ | ------------- |
+| Buy & Hold               | 24.99%       | 1.897        | 59.50%        |
+| Random Forest Regressor  | 8.60%        | 0.737        | 50.41%        |
+| Linear Regression        | 0.68%        | 0.119        | 52.07%        |
+| Random Forest Classifier | 0.68%        | 0.119        | 52.07%        |
 
 ---
 
-# 📉 Key Lessons Learned
+# 💡 What I Learned
 
-This project reinforced several important lessons about quantitative finance:
+When I started this project, I thought the goal was to build a model that could beat the market.
 
-### 1. Financial markets are difficult to predict
+By the end, I realized the real value was understanding how difficult that challenge actually is.
 
-Even sophisticated features often have weak predictive power.
+The Random Forest Regressor became the strongest machine learning model, but the simple Buy & Hold strategy still outperformed every active trading strategy.
 
-### 2. Accuracy is not everything
+That result taught me one of the most important lessons in quantitative finance:
 
-A model with lower prediction accuracy can still generate better trading returns.
-
-### 3. Feature engineering matters
-
-Market returns, volatility, moving averages, and volume signals provide valuable information for machine learning models.
-
-### 4. Backtesting is essential
-
-Evaluating a model through trading performance provides more practical insight than prediction metrics alone.
+> **A model should not only make predictions—it should be evaluated against realistic benchmarks to determine whether it actually creates value.**
 
 ---
 
@@ -226,41 +108,37 @@ Evaluating a model through trading performance provides more practical insight t
 * Python
 * Pandas
 * NumPy
-* Matplotlib
-* Seaborn
 * Scikit-Learn
+* Matplotlib
 * Google Colab
+* GitHub
 
 ---
 
 # 🚀 Future Improvements
 
-Potential enhancements include:
-
-* XGBoost Regressor
-* LightGBM
-* LSTM Deep Learning Models
-* Hyperparameter Optimization
 * Walk-Forward Validation
+* Hyperparameter Optimization
+* Transaction Cost Modeling
+* XGBoost / LightGBM Models
+* Real-Time Prediction Dashboard
 * Portfolio Optimization
-* Multi-Asset Trading Strategies
 
 ---
 
-# 👩‍💻 Author
+# 📌 Final Thoughts
 
-**Pooja Sukhdeve**
+This project strengthened my understanding of:
 
-Master of Science in Computer Science
-Boston University Metropolitan College
-
-Interested in:
-
-* Machine Learning
 * Data Science
-* Quantitative Finance
-* Software Development
+* Machine Learning
+* Feature Engineering
+* Financial Data Analysis
+* Quantitative Trading
+* Strategy Backtesting
 
----
+More importantly, it reinforced a lesson that applies far beyond finance:
 
-*"The goal was never to perfectly predict the market. The goal was to understand it better through data, statistics, and machine learning."*
+> **Good Data Science isn't about proving that a model works. It's about honestly testing ideas, learning from the results, and letting the data challenge your assumptions.**
+
+If you have suggestions or ideas for improving this project, I'd love to connect and discuss them.
